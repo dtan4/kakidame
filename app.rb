@@ -16,7 +16,18 @@ class KakidameApp < Sinatra::Base
     register Sinatra::Reloader
   end
 
+  # Root
   get '/' do
-    KAKIDAME_ROOT
+    "Root: " + KAKIDAME_ROOT
+  end
+
+  # Directory
+  get '/*/' do
+    "Directory: " + params[:splat].join('/')
+  end
+
+  # File
+  get '/*' do
+    "File: " + params[:splat].join('/')
   end
 end
