@@ -14,6 +14,7 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    redcarpet (2.2.2)
     sinatra (1.4.2)
       rack (~> 1.5, >= 1.5.2)
       rack-protection (~> 1.4)
@@ -35,5 +36,6 @@ PLATFORMS
 
 DEPENDENCIES
   pry
+  redcarpet
   sinatra
   sinatra-reloader
