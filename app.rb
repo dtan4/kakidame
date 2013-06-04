@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
+require_relative 'util.rb'
+
 class KakidameApp < Sinatra::Base
+  include KakidameUtil
+
   CONFIG_PATH = ENV['HOME'] + '/.kakidame'
 
   configure do
@@ -39,10 +43,12 @@ class KakidameApp < Sinatra::Base
 
     if Dir.exists?(file_path)
       redirect relative_path + '/'
-    elsif !File.exists?(file_path)
-      return "404 not found"
     else
-      show_file(file_path)
+      if !File.exists?(file_path)
+        return "404 not found"
+      else
+        show_file(file_path)
+      end
     end
   end
 
@@ -55,43 +61,10 @@ class KakidameApp < Sinatra::Base
 
   def show_file(file_path)
     @is_child, @files, @dirs = get_file_list(File.dirname(file_path))
-
-    markdown = File.open(file_path).read
-    @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+    @html = generate_html_from_markdown(file_path)
     @current_file = File.basename(file_path)
+    @modified_at = File.mtime(file_path)
 
     erb :file
-  end
-
-  def get_file_list(dir_path)
-    is_child = dir_path != KAKIDAME_ROOT
-
-    files = []
-    dirs = []
-    Dir.chdir(dir_path)
-
-    Dir.glob('*') do |f|
-      if File::ftype(f) == "file"
-        if f =~ /\.md$/i
-          title = extract_markdown_title(f)
-          files << [title, f]
-        end
-      else
-        dirs << f + '/'
-      end
-    end
-
-    return is_child, files, dirs
-  end
-
-  def extract_markdown_title(file_path)
-    markdown = File.open(file_path).read
-
-    title =
-      if markdown.split("\n")[0] =~ /^#(.+)$/
-        $1.strip
-      else
-        file_path
-      end
   end
 end

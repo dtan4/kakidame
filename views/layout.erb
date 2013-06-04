@@ -7,6 +7,14 @@
     <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
   </head>
   <body>
+    <div class="navbar navbar-fluid-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand">Kakidame （書溜）</a>
+        </div>
+      </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
@@ -14,10 +22,11 @@
             <ul class="nav nav-list">
               <li class="header">Markdown files</li>
               <% @files.each do |file| %>
-              <% if file[1] == @current_file %>
-              <li class="active"><a href="<%= file[1] %>"><%= file[0] %></a></li>
+              <% if file[:file_name] == @current_file %>
+              <li class="active"><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
               <% else %>
-              <li><a href="<%= file[1] %>"><%= file[0] %></a></li>                    <% end %>
+              <li><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
+              <% end %>
               <% end %>
               <li class="header">Directory</li>
               <% if @is_child %>

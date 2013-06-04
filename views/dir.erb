@@ -1,11 +1,10 @@
+<% @files.each do |file| %>
+<p><a href="<%= file[:file_name] %>"><%= file[:title] %></a></p>
+<% end %>
+<hr />
 <% if @is_child %>
 <p><a href="..">../</a></p>
 <% end %>
-<hr />
 <% @dirs.each do |dir| %>
 <p><a href="<%= dir %>"><%= dir %></a></p>
-<% end %>
-<hr />
-<% @files.each do |file| %>
-<p><a href="<%= file[1] %>"><%= file[0] %></a></p>
 <% end %>
