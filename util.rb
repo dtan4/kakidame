@@ -20,6 +20,9 @@ module KakidameUtil
       end
     end
 
+    files = files.sort_by { |file| file[:title] }
+    dirs = dirs.sort
+
     return is_child, files, dirs
   end
 
