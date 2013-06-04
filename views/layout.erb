@@ -10,7 +10,8 @@
     <div class="navbar navbar-fluid-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand">Kakidame （書溜）</a>
+          <a class="brand" href="/">Kakidame（書溜）</a>
+          <a class="brand" href="<%= Dir.pwd %>"><%= Dir.pwd %></a>
         </div>
       </div>
     </div>
@@ -20,7 +21,7 @@
         <div class="span3">
           <div class="well">
             <ul class="nav nav-list">
-              <li class="header">Markdown files</li>
+              <li class="nav-header">Markdown file</li>
               <% @files.each do |file| %>
               <% if file[:file_name] == @current_file %>
               <li class="active"><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
@@ -28,7 +29,7 @@
               <li><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
               <% end %>
               <% end %>
-              <li class="header">Directory</li>
+              <li class="nav-header">Directory</li>
               <% if @is_child %>
               <li><a href="..">../</a></li>
               <% end %>
@@ -37,6 +38,17 @@
               <% end %>
             </ul>
           </div>
+
+          <% if @info %>
+          <div class="well">
+            <ul class="nav nav-list">
+              <li class="nav-header">File name</li>
+              <li><%= @info[:name] %></li>
+              <li class="nav-header">Last modified</li>
+              <li><%= @info[:modified_at] %></li>
+            </ul>
+          </div>
+          <% end %>
         </div>
         <div class="span9">
           <%= yield %>

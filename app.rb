@@ -54,13 +54,15 @@ class KakidameApp < Sinatra::Base
 
   private
   def show_dir(dir_path)
+    @info = nil
     @is_child, @files, @dirs = get_file_list(dir_path)
 
     erb :dir
   end
 
   def show_file(file_path)
-    @is_child, @files, @dirs = get_file_list(File.dirname(file_path))
+    @info = get_file_info(file_path)
+    @is_child, @files, @dirs = get_file_list(@info[:dir])
     @html = generate_html_from_markdown(file_path)
     @current_file = File.basename(file_path)
     @modified_at = File.mtime(file_path)
