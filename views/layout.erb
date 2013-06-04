@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Kakidame</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well">
+            <ul class="nav nav-list">
+              <li class="header">Markdown files</li>
+              <% @files.each do |file| %>
+              <% if file[1] == @current_file %>
+              <li class="active"><a href="<%= file[1] %>"><%= file[0] %></a></li>
+              <% else %>
+              <li><a href="<%= file[1] %>"><%= file[0] %></a></li>                    <% end %>
+              <% end %>
+              <li class="header">Directory</li>
+              <% if @is_child %>
+              <li><a href="..">../</a></li>
+              <% end %>
+              <% @dirs.each do |dir| %>
+              <li><a href="<%= dir %>"><%= dir %></a></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>

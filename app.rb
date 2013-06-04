@@ -34,39 +34,64 @@ class KakidameApp < Sinatra::Base
 
   # File
   get '/*' do
-    file_path = File.absolute_path(params[:splat].join('/'), KAKIDAME_ROOT)
+    relative_path = params[:splat].join('/')
+    file_path = File.absolute_path(relative_path, KAKIDAME_ROOT)
 
     if Dir.exists?(file_path)
-      return show_dir(file_path)
+      redirect relative_path + '/'
     elsif !File.exists?(file_path)
       return "404 not found"
+    else
+      show_file(file_path)
     end
-
-    show_file(file_path)
   end
 
   private
   def show_dir(dir_path)
-    @files = []
-    @dirs = []
+    @is_child, @files, @dirs = get_file_list(dir_path)
+
+    erb :dir
+  end
+
+  def show_file(file_path)
+    @is_child, @files, @dirs = get_file_list(File.dirname(file_path))
+
+    markdown = File.open(file_path).read
+    @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+    @current_file = File.basename(file_path)
+
+    erb :file
+  end
+
+  def get_file_list(dir_path)
+    is_child = dir_path != KAKIDAME_ROOT
+
+    files = []
+    dirs = []
     Dir.chdir(dir_path)
 
     Dir.glob('*') do |f|
       if File::ftype(f) == "file"
-        @files << f if f =~ /\.md$/i
+        if f =~ /\.md$/i
+          title = extract_markdown_title(f)
+          files << [title, f]
+        end
       else
-        @dirs << f + '/'
+        dirs << f + '/'
       end
     end
 
-    @files = @files.map { |f| "<a href=\"#{f}\">#{f}</a>" }
-    @dirs = @dirs.map { |d| "<a href=\"#{d}\">#{d}</a>" }
-
-    @files.join("<br />") + "<hr />" + @dirs.join("<br />")
+    return is_child, files, dirs
   end
 
-  def show_file(file_path)
+  def extract_markdown_title(file_path)
     markdown = File.open(file_path).read
-    Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+
+    title =
+      if markdown.split("\n")[0] =~ /^#(.+)$/
+        $1.strip
+      else
+        file_path
+      end
   end
 end
