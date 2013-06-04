@@ -11,7 +11,7 @@
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="/">Kakidame（書溜）</a>
-          <a class="brand" href="<%= Dir.pwd %>"><%= Dir.pwd %></a>
+          <a class="brand" href="<%= @relative_dir %>"><%= @relative_dir %></a>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
             <ul class="nav nav-list">
               <li class="nav-header">Markdown file</li>
               <% @files.each do |file| %>
-              <% if file[:file_name] == @current_file %>
+              <% if @info && (file[:file_name] == @info[:name]) %>
               <li class="active"><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
               <% else %>
               <li><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>

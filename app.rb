@@ -11,6 +11,7 @@ class KakidameApp < Sinatra::Base
   configure do
     load CONFIG_PATH if File.exists?(CONFIG_PATH)
     KAKIDAME_ROOT = ENV['HOME'] + '/memo' unless defined? KAKIDAME_ROOT
+    KAKIDAME_ROOT = File.absolute_path(KAKIDAME_ROOT) # ~ 対策
     Dir.mkdir(KAKIDAME_ROOT) unless Dir.exists?(KAKIDAME_ROOT)
   end
 
@@ -55,6 +56,7 @@ class KakidameApp < Sinatra::Base
   private
   def show_dir(dir_path)
     @info = nil
+    @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
     @is_child, @files, @dirs = get_file_list(dir_path)
 
     erb :dir
@@ -62,10 +64,9 @@ class KakidameApp < Sinatra::Base
 
   def show_file(file_path)
     @info = get_file_info(file_path)
+    @relative_dir = @info[:dir].gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
     @is_child, @files, @dirs = get_file_list(@info[:dir])
     @html = generate_html_from_markdown(file_path)
-    @current_file = File.basename(file_path)
-    @modified_at = File.mtime(file_path)
 
     erb :file
   end
