@@ -67,6 +67,7 @@ class KakidameApp < Sinatra::Base
     @relative_dir = @info[:dir].gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
     @is_child, @files, @dirs = get_file_list(@info[:dir])
     @html = generate_html_from_markdown(file_path)
+    @raw = File.open(file_path).read
 
     erb :file
   end
