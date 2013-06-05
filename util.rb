@@ -26,9 +26,14 @@ module KakidameUtil
     return is_child, files, dirs
   end
 
-  def generate_html_from_markdown(file_path)
-    markdown = File.open(file_path).read
-    html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+  def parse_text_file(file_path)
+    text = File.open(file_path).read
+
+    # TODO: if Markdown file
+    html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
+    raw = CGI.escapeHTML(text)
+
+    return html, raw
   end
 
   def extract_markdown_title(file_path)
