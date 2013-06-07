@@ -1,7 +1,20 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env rubyp
 # -*- coding: utf-8 -*-
 
 module KakidameUtil
+  MARKDOWN_EXTENSION = ['md', 'markdown']
+  SOURCE_CODE_EXTENSION = [
+                           'c',
+                           'cpp',
+                           'h',
+                           'java',
+                           'rb',
+                           'py',
+                           'pl',
+                           'js',
+                           'html'
+                          ]
+
   def get_file_list(dir_path, root_dir, extension)
     is_child = dir_path != root_dir
 
@@ -33,6 +46,8 @@ module KakidameUtil
 
     if MARKDOWN_EXTENSION.include?(extension)
       html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
+    # elsif SOURCE_CODE_EXTENSION.include?(extension)
+      # TODO: Syntax highlighting
     end
 
     raw = CGI.escapeHTML(text)

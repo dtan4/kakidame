@@ -18,8 +18,8 @@ class KakidameApp < Sinatra::Base
       exit 1
     end
 
-    MARKDOWN_EXTENSION = ['md', 'markdown']
-    FILE_EXTENSION = MARKDOWN_EXTENSION unless defined? FILE_EXTENSION
+    FILE_EXTENSION =
+      [MARKDOWN_EXTENSION, SOURCE_CODE_EXTENSION].flatten unless defined? FILE_EXTENSION
 
     unless FILE_EXTENSION.instance_of? Array
       $stderr.puts "error: FILE_EXTENSION must be Array."
