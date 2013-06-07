@@ -40,7 +40,7 @@ module KakidameUtil
     markdown = File.open(file_path).read
 
     title =
-      if markdown.split("\n")[0] =~ /^#(.+)$/
+      if markdown.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '?').encode("UTF-8").split("\n")[0] =~ /^#+(.+)$/
         $1.strip
       else
         file_path
