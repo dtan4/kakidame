@@ -12,7 +12,19 @@ class KakidameApp < Sinatra::Base
     load CONFIG_PATH if File.exists?(CONFIG_PATH)
     KAKIDAME_ROOT = ENV['HOME'] + '/memo' unless defined? KAKIDAME_ROOT
     KAKIDAME_ROOT = File.absolute_path(KAKIDAME_ROOT) # ~ 対策
-    Dir.mkdir(KAKIDAME_ROOT) unless Dir.exists?(KAKIDAME_ROOT)
+
+    unless Dir.exists?(KAKIDAME_ROOT)
+      $stderr.puts "error: KAKIDAME_ROOT #{KAKIDAME_ROOT} is not found."
+      exit 1
+    end
+
+    MARKDOWN_EXTENSION = ['md', 'markdown']
+    FILE_EXTENSION = MARKDOWN_EXTENSION unless defined? FILE_EXTENSION
+
+    unless FILE_EXTENSION.instance_of? Array
+      $stderr.puts "error: FILE_EXTENSION must be Array."
+      exit 1
+    end
   end
 
   configure :development do
@@ -57,7 +69,7 @@ class KakidameApp < Sinatra::Base
   def show_dir(dir_path)
     @info = nil
     @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
-    @is_child, @files, @dirs = get_file_list(dir_path)
+    @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
 
     erb :dir
   end
@@ -65,7 +77,7 @@ class KakidameApp < Sinatra::Base
   def show_file(file_path)
     @info = get_file_info(file_path)
     @relative_dir = @info[:dir].gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
-    @is_child, @files, @dirs = get_file_list(@info[:dir])
+    @is_child, @files, @dirs = get_file_list(@info[:dir], KAKIDAME_ROOT, FILE_EXTENSION)
     @html, @raw = parse_text_file(file_path)
 
     erb :file

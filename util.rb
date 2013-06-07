@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 module KakidameUtil
-  def get_file_list(dir_path)
-    is_child = dir_path != KAKIDAME_ROOT
+  def get_file_list(dir_path, root_dir, extension)
+    is_child = dir_path != root_dir
 
     files = []
     dirs = []
@@ -11,7 +11,7 @@ module KakidameUtil
 
     Dir.glob('*') do |f|
       if File::ftype(f) == "file"
-        if f =~ /\.md$/i
+        if extension.include?(File.extname(f)[1..-1])
           title = extract_markdown_title(f)
           files << {title: title, file_name: f}
         end
