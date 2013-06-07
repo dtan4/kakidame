@@ -11,7 +11,7 @@ module KakidameUtil
 
     Dir.glob('*') do |f|
       if File::ftype(f) == "file"
-        if extension.include?(File.extname(f)[1..-1])
+        if extension.include?(get_file_ext(f))
           title = extract_markdown_title(f)
           files << {title: title, file_name: f}
         end
@@ -28,9 +28,13 @@ module KakidameUtil
 
   def parse_text_file(file_path)
     text = File.open(file_path).read
+    extension = get_file_ext(file_path)
+    html = nil
 
-    # TODO: if Markdown file
-    html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
+    if MARKDOWN_EXTENSION.include?(extension)
+      html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
+    end
+
     raw = CGI.escapeHTML(text)
 
     return html, raw
@@ -54,5 +58,10 @@ module KakidameUtil
       name: File.basename(file_path),
       modified_at: File.mtime(file_path)
     }
+  end
+
+  private
+  def get_file_ext(file_name)
+    File.extname(file_name).gsub('.', '')
   end
 end

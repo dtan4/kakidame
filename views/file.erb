@@ -1,16 +1,24 @@
 <ul class="nav nav-tabs">
+<% if @html %>
 <li class="active">
 <a href="#pretty" data-toggle="tab">Pretty</a>
 </li>
 <li>
+<% else %>
+<li class="active">
+<% end %>
 <a href="#raw" data-toggle="tab">Raw</a>
 </li>
 </ul>
 <div class="tab-content">
+<% if @html %>
 <div class="tab-pane active" id="pretty">
 <%= @html %>
 </div>
 <div class="tab-pane" id="raw">
+<% else %>
+<div class="tab-pane active" id="raw">
+<% end %>
 <pre>
 <%= @raw %>
 </pre>
