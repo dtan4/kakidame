@@ -46,8 +46,8 @@ module KakidameUtil
 
     if MARKDOWN_EXTENSION.include?(extension)
       html = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
-    # elsif SOURCE_CODE_EXTENSION.include?(extension)
-      # TODO: Syntax highlighting
+    elsif SOURCE_CODE_EXTENSION.include?(extension)
+      html = "<pre class=\"prettyprint linenums\">\n" + CGI.escapeHTML(text) + "\n</pre>"
     end
 
     raw = CGI.escapeHTML(text)
