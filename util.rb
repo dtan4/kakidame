@@ -1,4 +1,4 @@
-#!/usr/bin/env rubyp
+#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
 module KakidameUtil
