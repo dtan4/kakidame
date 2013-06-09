@@ -24,8 +24,14 @@ module KakidameUtil
 
     Dir.glob('*') do |f|
       if File::ftype(f) == "file"
-        if extension.include?(get_file_ext(f))
-          title = extract_markdown_title(f)
+        file_ext = get_file_ext(f)
+
+        if extension.include?(file_ext)
+          title = if MARKDOWN_EXTENSION.include?(file_ext)
+                    extract_markdown_title(f)
+                  else
+                    f
+                  end
           files << {title: title, file_name: f}
         end
       else

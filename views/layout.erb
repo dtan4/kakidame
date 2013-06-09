@@ -21,7 +21,7 @@
         <div class="span3">
           <div class="well">
             <ul class="nav nav-list">
-              <li class="nav-header">Markdown file</li>
+              <li class="nav-header">File</li>
               <% @files.each do |file| %>
               <% if @info && (file[:file_name] == @info[:name]) %>
               <li class="active"><a href="<%= file[:file_name] %>"><%= file[:title] %></a></li>
