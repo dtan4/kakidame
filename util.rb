@@ -108,7 +108,7 @@ module KakidameUtil
 
   def search_file(file_path, search_query)
     text = NKF.nkf('-w', File.open(file_path).read)
-    text.each_line { |line| return true if line =~ /#{search_query}/ }
+    text.each_line { |line| return true if line =~ /#{search_query}/i }
     false
   end
 end
