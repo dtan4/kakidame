@@ -22,10 +22,13 @@ module KakidameUtil
 
     files = []
     dirs = []
+
     Dir.chdir(dir_path)
 
     Dir.glob('*') do |f|
-      if File::ftype(f) == "file"
+      if File::ftype(f) == "directory"
+        dirs << f + '/'
+      else
         file_ext = get_file_ext(f)
 
         if extension.include?(file_ext)
@@ -36,8 +39,6 @@ module KakidameUtil
                   end
           files << {title: title, file_name: f}
         end
-      else
-        dirs << f + '/'
       end
     end
 
