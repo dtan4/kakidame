@@ -61,6 +61,16 @@ module KakidameUtil
     return html, raw
   end
 
+  def get_file_info(file_path)
+    info = {
+      fullpath: file_path,
+      dir: File.dirname(file_path),
+      name: File.basename(file_path),
+      modified_at: File.mtime(file_path)
+    }
+  end
+
+  private
   def extract_markdown_title(file_path)
     markdown = File.open(file_path).read
 
@@ -72,16 +82,6 @@ module KakidameUtil
       end
   end
 
-  def get_file_info(file_path)
-    info = {
-      fullpath: file_path,
-      dir: File.dirname(file_path),
-      name: File.basename(file_path),
-      modified_at: File.mtime(file_path)
-    }
-  end
-
-  private
   def get_file_ext(file_name)
     File.extname(file_name).gsub('.', '')
   end
