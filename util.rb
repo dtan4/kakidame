@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
+require 'nkf'
+
 module KakidameUtil
   MARKDOWN_EXTENSION = ['md', 'markdown']
   SOURCE_CODE_EXTENSION = [
@@ -89,10 +91,10 @@ module KakidameUtil
 
   private
   def extract_markdown_title(file_path)
-    markdown = File.open(file_path).read
+    markdown = NKF.nkf('-w', File.open(file_path).read)
 
     title =
-      if markdown.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '?').encode("UTF-8").split("\n")[0] =~ /^#+(.+)$/
+      if markdown.split("\n")[0] =~ /^#+(.+)$/
         $1.strip
       else
         file_path
@@ -104,7 +106,7 @@ module KakidameUtil
   end
 
   def search_file(file_path, search_query)
-    text = File.open(file_path) { |f| f.read }
+    text = NKF.nkf('-w', File.open(file_path).read)
     text.each_line { |line| return true if line =~ /#{search_query}/ }
     false
   end
