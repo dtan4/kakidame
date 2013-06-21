@@ -11,7 +11,11 @@
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="/">Kakidame（書溜）</a>
-          <a class="brand" href="<%= @relative_dir %>"><%= @relative_dir %></a>
+          <a class="brand" href="/home<%= @relative_dir %>"><%= @relative_dir %></a>
+          <form class="navbar-search pull-right" action="/search">
+            <input type="hidden" name="d" value="<%= @relative_dir %>">
+            <input type="text" class="search-query", name="q" placeholder="Search">
+          </form>
         </div>
       </div>
     </div>
@@ -19,6 +23,7 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
+          <% if @files %>
           <div class="well">
             <ul class="nav nav-list">
               <li class="nav-header">File</li>
@@ -48,6 +53,7 @@
               <li><%= @info[:modified_at] %></li>
             </ul>
           </div>
+          <% end %>
           <% end %>
         </div>
         <div class="span9">

@@ -34,11 +34,15 @@ class KakidameApp < Sinatra::Base
 
   # Root
   get '/' do
+    redirect '/home/'
+  end
+
+  get '/home/' do
     show_dir(KAKIDAME_ROOT)
   end
 
   # Directory
-  get '/*/' do
+  get '/home/*/' do
     dir_name = params[:splat].join('/') + '/'
     dir_path = File.absolute_path(dir_name, KAKIDAME_ROOT)
 
@@ -50,7 +54,7 @@ class KakidameApp < Sinatra::Base
   end
 
   # File
-  get '/*' do
+  get '/home/*' do
     relative_path = params[:splat].join('/')
     file_path = File.absolute_path(relative_path, KAKIDAME_ROOT)
 
@@ -63,6 +67,14 @@ class KakidameApp < Sinatra::Base
         show_file(file_path)
       end
     end
+  end
+
+  # Search
+  get '/search' do
+    search_query = params[:q]
+    dir_path = KAKIDAME_ROOT + params[:d]
+
+    show_search(dir_path, search_query)
   end
 
   private
@@ -81,5 +93,16 @@ class KakidameApp < Sinatra::Base
     @html, @raw = parse_text_file(file_path)
 
     erb :file
+  end
+
+  def show_search(dir_path, search_query)
+    @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "")
+    # @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
+    @info = nil
+
+    @search_results = search(dir_path, search_query, FILE_EXTENSION)
+    @search_results.map! { |result| result.gsub(KAKIDAME_ROOT, '') }
+
+    erb :search
   end
 end

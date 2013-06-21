@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
+require 'nkf'
+
 module KakidameUtil
   MARKDOWN_EXTENSION = ['md', 'markdown']
   SOURCE_CODE_EXTENSION = [
@@ -20,10 +22,13 @@ module KakidameUtil
 
     files = []
     dirs = []
+
     Dir.chdir(dir_path)
 
     Dir.glob('*') do |f|
-      if File::ftype(f) == "file"
+      if File::ftype(f) == "directory"
+        dirs << f + '/'
+      else
         file_ext = get_file_ext(f)
 
         if extension.include?(file_ext)
@@ -34,8 +39,6 @@ module KakidameUtil
                   end
           files << {title: title, file_name: f}
         end
-      else
-        dirs << f + '/'
       end
     end
 
@@ -61,17 +64,6 @@ module KakidameUtil
     return html, raw
   end
 
-  def extract_markdown_title(file_path)
-    markdown = File.open(file_path).read
-
-    title =
-      if markdown.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '?').encode("UTF-8").split("\n")[0] =~ /^#+(.+)$/
-        $1.strip
-      else
-        file_path
-      end
-  end
-
   def get_file_info(file_path)
     info = {
       fullpath: file_path,
@@ -81,8 +73,42 @@ module KakidameUtil
     }
   end
 
+  def search(dir_path, search_query, extension)
+    results = []
+    is_child, files, dirs = get_file_list(dir_path, dir_path, extension)
+
+    files.each do |file|
+      f_path = File.absolute_path(file[:file_name], dir_path)
+      results << f_path if search_file(f_path, search_query)
+    end
+
+    dirs.each do |dir|
+      d_path = File.absolute_path(dir, dir_path)
+      results.concat search(d_path, search_query, extension)
+    end
+
+    results
+  end
+
   private
+  def extract_markdown_title(file_path)
+    markdown = NKF.nkf('-w', File.open(file_path).read)
+
+    title =
+      if markdown.split("\n")[0] =~ /^#+(.+)$/
+        $1.strip
+      else
+        file_path
+      end
+  end
+
   def get_file_ext(file_name)
     File.extname(file_name).gsub('.', '')
+  end
+
+  def search_file(file_path, search_query)
+    text = NKF.nkf('-w', File.open(file_path).read)
+    text.each_line { |line| return true if line =~ /#{search_query}/i }
+    false
   end
 end
