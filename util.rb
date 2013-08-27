@@ -49,7 +49,7 @@ module KakidameUtil
   end
 
   def parse_text_file(file_path)
-    text = File.open(file_path).read
+    text = NKF.nkf('-w', File.open(file_path).read)
     extension = get_file_ext(file_path)
     html = nil
 
