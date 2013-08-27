@@ -61,10 +61,10 @@ class KakidameApp < Sinatra::Base
     if Dir.exists?(file_path)
       redirect relative_path + '/'
     else
-      if !File.exists?(file_path)
-        return "404 not found"
-      else
+      if File.exists?(file_path)
         show_file(file_path)
+      else
+        return "404 not found"
       end
     end
   end
