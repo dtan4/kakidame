@@ -8,3 +8,4 @@ group :development do
 end
 
 gem 'redcarpet', require: 'redcarpet'
+gem 'slim', require:'slim'

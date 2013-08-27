@@ -1,0 +1,49 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    title Kakidame
+    link href="/css/bootstrap.min.css" rel="stylesheet"
+    link href="/css/bootstrap-responsive.min.css" rel="stylesheet"
+
+  body
+    div class="navbar navbar-fluid-top"
+      .navbar-inner
+        .container
+          a class="brand" href="/" Kakidame（書溜）
+          a class="brand" href="/home#{@relative_dir}" #{@relative_dir}
+          form class="navbar-search pull-right" action="/search"
+            input type="hidden" name="d" value="\#{@relative_dir}"
+            input type="text" class="search-query" name="q" placeholder="Search"
+
+    .container-fluid
+      .row-fluid
+        .span3
+          - if @files
+            .well
+              ul class="nav nav-list"
+                li class="nav-header" File
+                - @files.each do |file|
+                  - if @info && (file[:file_name] == @info[:name])
+                    li class="active": a[href="#{file[:file_name]}"] #{file[:title]}
+                  - else
+                    li : a[href="#{file[:file_name]}"] #{file[:title]}
+                li class="nav-header" Directory
+                - if @is_child
+                  li : a[href=".."] ../
+                - @dirs.each do |dir|
+                  li : a[href="#{dir}"] #{dir}
+
+            - if @info
+              .well
+                ul class="nav nav-list"
+                  li class="nav-header" File name
+                  li #{@info[:name]}
+                  li class="nav-header" Last modified
+                  li #{@info[:modified_at]}
+
+        .span9
+          == yield
+
+    script src="/js/jquery-1.10.2.min.js"
+    script src="/js/bootstrap.min.js"

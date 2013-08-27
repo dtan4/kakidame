@@ -83,7 +83,7 @@ class KakidameApp < Sinatra::Base
     @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
     @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
 
-    erb :dir
+    slim :dir
   end
 
   def show_file(file_path)
@@ -92,7 +92,7 @@ class KakidameApp < Sinatra::Base
     @is_child, @files, @dirs = get_file_list(@info[:dir], KAKIDAME_ROOT, FILE_EXTENSION)
     @html, @raw = parse_text_file(file_path)
 
-    erb :file
+    slim :file
   end
 
   def show_search(dir_path, search_query)
@@ -103,6 +103,6 @@ class KakidameApp < Sinatra::Base
     @search_results = search(dir_path, search_query, FILE_EXTENSION)
     @search_results.map! { |result| result.gsub(KAKIDAME_ROOT, '') }
 
-    erb :search
+    slim :search
   end
 end

@@ -1,0 +1,10 @@
+- @files.each do |file|
+  p : a[href="#{file[:file_name]}"] #{file[:title]}
+
+hr
+
+- if @is_child
+  p : a[href=".."] ../
+
+- @dirs.each do |dir|
+  p : a[href="#{dir}"] #{dir}
