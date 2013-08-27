@@ -13,7 +13,7 @@ html
           a class="brand" href="/" Kakidame（書溜）
           a class="brand" href="/home#{@relative_dir}" #{@relative_dir}
           form class="navbar-search pull-right" action="/search"
-            input type="hidden" name="d" value="\#{@relative_dir}"
+            input type="hidden" name="d" value="#{@relative_dir}"
             input type="text" class="search-query" name="q" placeholder="Search"
 
     .container-fluid
