@@ -25,9 +25,17 @@ html
                 li class="nav-header" File
                 - @files.each do |file|
                   - if @info && (file[:file_name] == @info[:name])
-                    li class="active": a[href="#{file[:file_name]}"] #{file[:title]}
+                    li class="active"
+                      - if file[:title] == ""
+                        a href="#{file[:file_name]}" #{file[:file_name]}
+                      - else
+                        a href="#{file[:file_name]}" #{file[:title]} [#{file[:file_name]}]
                   - else
-                    li : a[href="#{file[:file_name]}"] #{file[:title]}
+                    li
+                      - if file[:title] == ""
+                        a href="#{file[:file_name]}" #{file[:file_name]}
+                      - else
+                        a href="#{file[:file_name]}" #{file[:title]} [#{file[:file_name]}]
                 li class="nav-header" Directory
                 - if @is_child
                   li : a[href=".."] ../

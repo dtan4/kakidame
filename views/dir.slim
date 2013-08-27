@@ -1,5 +1,9 @@
 - @files.each do |file|
-  p : a[href="#{file[:file_name]}"] #{file[:title]}
+  p
+    - if file[:title] == ""
+      a href="#{file[:file_name]}" #{file[:file_name]}
+    - else
+      a href="#{file[:file_name]}" #{file[:title]} [#{file[:file_name]}]
 
 hr
 

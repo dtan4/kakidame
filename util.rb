@@ -35,7 +35,7 @@ module KakidameUtil
           title = if MARKDOWN_EXTENSION.include?(file_ext)
                     extract_markdown_title(f)
                   else
-                    f
+                    ""
                   end
           files << {title: title, file_name: f}
         end
@@ -98,7 +98,7 @@ module KakidameUtil
       if markdown.split("\n")[0] =~ /^#+(.+)$/
         $1.strip
       else
-        file_path
+        ""
       end
   end
 
