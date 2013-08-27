@@ -1,6 +1,6 @@
 table class="table table-condensed table-striped"
   thead
-    tr File
+    td File
   - @files.each do |file|
     tr
       - if file[:title] == ""
@@ -12,7 +12,7 @@ hr
 
 table class="table table-condensed table-striped"
   thead
-    tr Directory
+    td Directory
   - if @is_child
     tr : td : a[href=".."] ../
   - @dirs.each do |dir|
