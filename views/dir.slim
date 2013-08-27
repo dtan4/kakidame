@@ -1,14 +1,19 @@
-- @files.each do |file|
-  p
-    - if file[:title] == ""
-      a href="#{file[:file_name]}" #{file[:file_name]}
-    - else
-      a href="#{file[:file_name]}" #{file[:title]} [#{file[:file_name]}]
+table class="table table-condensed table-striped"
+  thead
+    tr File
+  - @files.each do |file|
+    tr
+      - if file[:title] == ""
+        td : a href="#{file[:file_name]}" #{file[:file_name]}
+      - else
+        td : a href="#{file[:file_name]}" #{file[:title]} [#{file[:file_name]}]
 
 hr
 
-- if @is_child
-  p : a[href=".."] ../
-
-- @dirs.each do |dir|
-  p : a[href="#{dir}"] #{dir}
+table class="table table-condensed table-striped"
+  thead
+    tr Directory
+  - if @is_child
+    tr : td : a[href=".."] ../
+  - @dirs.each do |dir|
+    tr : td : a[href="#{dir}"] #{dir}
