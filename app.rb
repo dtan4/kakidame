@@ -97,7 +97,7 @@ class KakidameApp < Sinatra::Base
 
   def show_search(dir_path, search_query)
     @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "")
-    # @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
+    @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
     @info = nil
 
     @search_results = search(dir_path, search_query, FILE_EXTENSION)
