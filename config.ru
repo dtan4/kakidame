@@ -3,5 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-require './app'
-run KakidameApp
+require 'kakidame'
+run Kakidame::App
