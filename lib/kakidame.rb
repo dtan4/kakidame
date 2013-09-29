@@ -1,3 +1,5 @@
-module Kakidame
+require 'kakidame/app'
 
+module Kakidame
+  # something
 end
