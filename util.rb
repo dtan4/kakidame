@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 require 'nkf'
+require 'redcarpet'
 
 module KakidameUtil
   MARKDOWN_EXTENSION = ['md', 'markdown']

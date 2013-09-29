@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 require_relative 'util.rb'
+require 'sinatra/base'
+require 'sinatra/reloader'
+require 'slim'
 
 class KakidameApp < Sinatra::Base
   include KakidameUtil
