@@ -3,6 +3,7 @@
 
 require 'nkf'
 require 'redcarpet'
+require 'dalli'
 
 module Kakidame
   module Util
@@ -19,8 +20,12 @@ module Kakidame
                              'html'
                             ]
 
-    def get_file_list(dir_path, root_dir, extension)
+    def get_file_list(dir_path, root_dir, extension, cache)
       is_child = dir_path != root_dir
+
+      if (files = cache.get("files:#{dir_path}")) && (dirs = cache.get("dirs:#{dir_path}"))
+        return is_child, files, dirs
+      end
 
       files = []
       dirs = []
@@ -46,6 +51,9 @@ module Kakidame
 
       files = files.sort_by { |file| file[:title] }
       dirs = dirs.sort
+
+      cache.set("files:#{dir_path}", files)
+      cache.set("dirs:#{dir_path}", dirs)
 
       return is_child, files, dirs
     end

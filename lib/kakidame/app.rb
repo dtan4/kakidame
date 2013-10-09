@@ -5,6 +5,7 @@ require 'kakidame/util'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'slim'
+require 'dalli'
 
 module Kakidame
   class App < Sinatra::Base
@@ -31,6 +32,13 @@ module Kakidame
         $stderr.puts "error: FILE_EXTENSION must be Array."
         exit 1
       end
+
+      options = {
+        expires_in: 60,
+        namespace: "kakidame",
+        compress: true
+      }
+      set :cache, Dalli::Client.new("localhost:11211", options)
     end
 
     configure :development do
@@ -87,7 +95,7 @@ module Kakidame
     def show_dir(dir_path)
       @info = nil
       @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
-      @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
+      @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION, settings.cache)
 
       slim :dir
     end
@@ -95,15 +103,21 @@ module Kakidame
     def show_file(file_path)
       @info = get_file_info(file_path)
       @relative_dir = @info[:dir].gsub(/^#{KAKIDAME_ROOT}/, "") + "/"
-      @is_child, @files, @dirs = get_file_list(@info[:dir], KAKIDAME_ROOT, FILE_EXTENSION)
-      @html, @raw = parse_text_file(file_path)
+      @is_child, @files, @dirs = get_file_list(@info[:dir], KAKIDAME_ROOT, FILE_EXTENSION, settings.cache)
+
+      unless (@html = settings.cache.get("html:#{file_path}")) &&
+          (@raw = settings.cache.get("raw:#{file_path}"))
+        @html, @raw = parse_text_file(file_path)
+        settings.cache.set("html:#{file_path}", @html)
+        settings.cache.set("raw:#{file_path}", @raw)
+      end
 
       slim :file
     end
 
     def show_search(dir_path, search_query)
       @relative_dir = dir_path.gsub(/^#{KAKIDAME_ROOT}/, "")
-      @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION)
+      @is_child, @files, @dirs = get_file_list(dir_path, KAKIDAME_ROOT, FILE_EXTENSION, settings.cache)
       @info = nil
 
       @search_results = search(dir_path, search_query, FILE_EXTENSION)
